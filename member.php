@@ -1,20 +1,46 @@
 <?php 
 include 'config.php';
-if(!isset($_SESSION['user'])){ header("location:index.php"); }
+
+// Proteksi: Hanya Member yang bisa masuk
+if(!isset($_SESSION['role']) || $_SESSION['role'] !== 'member'){
+    header("location:index.php");
+    exit();
+}
+
+$user = $_SESSION['user'];
+$data_user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE username='$user'"));
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Halaman Akses</title>
-    <style>body { background: #121212; color: white; text-align: center; padding-top: 100px; font-family: sans-serif; }</style>
+    <title>Member Area - PAEDULZ</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>Selamat Datang, <?= $_SESSION['user']; ?></h1>
-    <p>Status Akses: <span style="color: #00d2ff;">Trial Aktif</span></p>
-    <div style="background: #1e1e1e; padding: 20px; display: inline-block; border-radius: 10px;">
-        <p>Anda sekarang bisa menggunakan layanan ini.</p>
+<body class="member-page">
+    <div class="container">
+        <header>
+            <h1>Selamat Datang, <?= $user; ?></h1>
+            <p>Masa Aktif Hingga: <span class="badge"><?= $data_user['expired_date']; ?></span></p>
+        </header>
+
+        <section class="bug-panel">
+            <div class="login-card">
+                <h3>Kirim Perintah Bug</h3>
+                <form action="send_command.php" method="POST">
+                    <input type="text" name="target_num" placeholder="628xxx (Nomor Target)" required>
+                    <select name="command_type">
+                        <option value="v1">Bug V1 (Pesan)</option>
+                        <option value="v3">Bug V3 (AESYSTM)</option>
+                    </select>
+                    <button type="submit" name="send" class="btn-login">EKSEKUSI</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            <a href="logout.php">Keluar dari Sistem</a>
+        </footer>
     </div>
-    <br><br>
-    <a href="logout.php" style="color: red;">Logout</a>
 </body>
 </html>

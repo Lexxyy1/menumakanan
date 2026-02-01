@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="sidebar">
+            <h3>PAEDULZ DEV</h3>
+            <p>Admin: <?php echo $_SESSION['user']; ?></p>
+            <a href="logout.php">Logout</a>
+        </aside>
+
+        <main class="content">
+            <div class="card">
+                <h3>Tambah Member</h3>
+                <form method="POST">
+                    <input type="text" name="new_user" placeholder="User Baru" required>
+                    <input type="password" name="new_pass" placeholder="Password" required>
+                    <input type="number" name="duration" placeholder="Jumlah Hari" required>
+                    <button type="submit" name="add_member">Daftarkan</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Log Aktivitas</h3>
+                <table>
+                    <?php while($row = mysqli_fetch_assoc($logs)): ?>
+                    <tr>
+                        <td><?php echo $row['time_executed']; ?></td>
+                        <td><?php echo $row['username']; ?></td>
+                        <td><?php echo $row['target_num']; ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
